@@ -31,7 +31,7 @@ description: 用大白话讲清楚 Android 11 之后为什么 Android/data 文�
 
 具体表现：
 
-- 用第三方文件管理器（比如 ES 文件浏览器、[RE 管理器](https://www.speedsoftware.co.uk/)）打开 `Android/data`，会显示「**无法访问**」「**需要授权**」「**空文件夹**」。
+- 用第三方文件管理器（比如 ES 文件浏览器、[MT 管理器](https://mt2.cn/)）打开 `Android/data`，会显示「**无法访问**」「**需要授权**」「**空文件夹**」。(MT 管理器会尝试绕过此限制，仅对部分系统有效，所以有人可能完全没遇到本文所述问题）
 - 系统自带的「文件管理」可以访问，但只能用系统提供的界面，不能像以前那样自由操作。
 
 ## 怎么访问 `Android/data`？
@@ -46,21 +46,11 @@ description: 用大白话讲清楚 Android 11 之后为什么 Android/data 文�
 2. 找到「**Android**」→「**data**」。
 3. 就能看到各 App 的数据文件夹了。
 
-### 方法 2：用支持 SAF 的第三方文件管理器
+### 方法 2：让文件管理器APP提权后访问（最优雅）
 
-有些第三方文件管理器支持 SAF，比如：
+使用Shizuku授予文件管理器APP（需适配Shizuku，如 MT 管理器）adb权限，就可以访问 Android/data 了，或者已 Root 用户也可直接授予 Root 权限。
 
-- **[MT 管理器](https://mt2.cn)**（后面会专门讲）
-- **Cx 文件管理器**
-- **[Material Files](https://github.com/zhanghai/MaterialFiles)**
-
-用这些 App 打开 `Android/data` 时，会弹 SAF 授权窗，授权后就能访问。但**只能访问你授权过的那个文件夹**，不能像以前那样自由跳转。
-
-:::note 名词解释
-**SAF**：Storage Access Framework，存储访问框架。Android 11 之后访问 `Android/data` 必须走这个框架，由系统弹窗让你手动授权，App 不能自动获取。
-:::
-
-### 方法 3：用电脑通过 USB 访问（推荐）
+### 方法 3：用电脑通过 USB 访问
 
 把手机连到电脑，用电脑的文件管理器访问 `Android/data`，**没有这个限制**（因为电脑走的是 [MTP 协议](https://www.runoob.com/np/mtp-protocol.html)，不走 Android 的权限系统）。
 
@@ -68,7 +58,7 @@ description: 用大白话讲清楚 Android 11 之后为什么 Android/data 文�
 2. 电脑打开「此电脑」→「手机内部存储」→「Android」→「data」。
 3. 自由复制、修改、删除。
 
-这是最方便的方法，**强烈推荐**。
+这是操作最方便的方法。
 
 ### 方法 4：用 ADB 命令（高级）
 
@@ -82,9 +72,13 @@ ls
 
 ADB 后面会专门讲。
 
-### 方法 5：Root 之后用 [RE 管理器](https://www.speedsoftware.co.uk/)（终极）
+### 方法 5：双向配合访问
 
-Root（获取最高权限）之后，用 [RE 管理器](https://www.speedsoftware.co.uk/)（Root Explorer）能完全自由访问所有文件夹，包括 `Android/data`、`/system`、`/data` 等。但 Root 会失去保修、影响银行 App，**不推荐普通用户折腾**。
+以上所述方法都是文件管理器单方面尝试访问文件，但是安卓系统还允许 APP 主动对外提供文件，也就是 SAF 框架。部分 APP （如 FCL ZL2 Termux ）就提供了这个接口，支持 SAF 的文件管理器可以直接向用户请求访问以上 APP 提供的文件。而且这种方式是 APP 主动提供文件，甚至可以用来访问（一般情况下）绝对私有外部无法访问的文件。
+
+:::note 名词解释
+**SAF**：Storage Access Framework，存储访问框架。
+:::
 
 ## 为什么 QQ 下载的文件在 `Android/data` 里？
 
@@ -108,5 +102,8 @@ QQ 下载的文件默认存在 `Android/data/com.tencent.mobileqq/Tencent/QQfile
 - `Android/data/<包名>/` 存每个 App 的数据。
 - **Android 11 起引入「分区存储」**，普通文件管理器打不开 `Android/data`。
 - 原因：防止 App 偷看其他 App 数据。
-- 访问方法：系统自带文件管理器、支持 SAF 的第三方管理器、电脑 USB、ADB、Root。
-- **最推荐：电脑 USB 访问**，没有限制。
+- 访问方法：系统自带文件管理器、电脑 USB、ADB、Root。
+
+## 拓展：/storage /sdcard是什么东西
+
+/storage/emulated/0 和 /sdcard 都是（二者等价）安卓内部存储的路径，也就是一般访问“手机存储”实际访问的路径，上面说的“Android/data”实际上是“/storage/emulated/0/Android/data”或“/sdcard/Android/data”。
