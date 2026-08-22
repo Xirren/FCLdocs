@@ -112,7 +112,7 @@ Java 版有海量 mod：工业 mod、魔法 mod、生物 mod、维度 mod，**�
 
 ### 6. 跨平台
 
-基岩版能跨设备联机，覆盖所有玩家。
+MC 能跨平台联机，覆盖所有玩家。
 
 ## Minecraft 和手机的关系
 
@@ -122,7 +122,7 @@ Minecraft 基岩版**原生支持手机**（安卓、iOS），从应用商店装
 
 1. Java 版需要 JVM，手机没有官方 JVM。
 2. Java 版用电脑的图形 API（OpenGL），手机用 OpenGL ES / Vulkan。
-3. Java 版的代码是给电脑架构（x86）编译的，手机是 ARM 架构。
+3. Java 版依赖的运行库，在手机上并不存在。
 
 **怎么在手机上玩 Java 版？** 用 **Fold Craft Launcher** 等启动器，把电脑 Java 版「移植」到手机。具体原理下一篇讲。
 
